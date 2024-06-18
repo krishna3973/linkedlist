@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Linked List</title>
+                <style>
+                    
+                    
+                    #resetpos{
+                        background: #f9ff0044;
+                        color: white;
+                        padding: 6px 12px;
+                        border-radius: 8px;
+                        border-style: solid;
+                        border-color: #ffff00;
+                    }
+                    
+                    #resetpos:disabled{
+                        background: #3a392f;
+                        color: black;
+                        border-color: transparent;
+                        border-style: none;
+                    }
+                    
+                    #resetpos:hover{
+                        background: black;
+                        border-color: #ffff00;
+                        box-shadow: 2px 2px 8px #ffff00;
+                    }
+                    
+                    #resetpos:hover:disabled{
+                        box-shadow: 0px 0px transparent;
+                        background: #3a392f;
+                        border-color: transparent;
+                    }
+                    
+                    #add,#add1,#del{
+                        color: white;
+                        background: #00ff0044;
+                        padding: 6px 12px;
+                        border-radius: 8px;
+                        border-color: #00ff00;
+                        border-style: solid;
+                        
+                    }
+                    
+                    #add:disabled,#add1:disabled,#del:disabled{
+                        background: #26363a;
+                        color: #191919;
+                        border-color: transparent;
+                    }
+                    
+                    #add:hover,#add1:hover,#del:hover{
+                        background: #000000;
+                        box-shadow: 2px 2px 8px #00ff00;
+                    }
+                    
+                    #add:hover:disabled,#add1:hover:disabled,#del:hover:disabled{
+                        background: #26363a;
+                        box-shadow: 0px 0px transparent;
+                    }
+                    
+                    .dim{
+                        color: #404040;
+                    }
+                    
+                </style>
+	</head>
+	<body style = "background:#20212A;color:white;font-family:Arial;">
+		
+            <div style="float: left">
+                <h4><u>Linked list</u></h4>
+
+		<p id = "tnd">Total nodes : </p>
+		<p id="sel">selected node : </p>
+		<p id = "nxt">next node : </p>
+		<p id = "val">value : </p>
+		<p id = "ish">is head : </p>
+		<p id = "ist">is tail : </p>
+
+                <div style="background: #2f2932;padding: 15px;border-radius: 8px;margin-bottom: 10px;font-family: sans-serif">
+                    <p>name : <input id="inpnam" type="text"/>  name : <input id="inpnam1" type="text"/></p>
+                    <p>value : <input id="inpval" type="text"/>  value : <input id="inpval1" type="text"/></p>
+                    <button id = "add" disabled style="margin-right: 160px">Add Head</button><button id = "add1" disabled>Add Tail</button></div>
+                    <button id = "del" style="margin-right: 300px" disabled >Delete</button><button id = "resetpos">Reset positions</button>
+                    <p style="background: #2a2620;padding: 4px;border-radius: 4px;"><span class="dim">|</span>  animation <span class="dim">|</span><input id="anmrg" type="range" min="0" max="4" value="2" oninput ="anm()" /><span id="ansp">2X</span></p>
+		
+
+            </div>    
+                
+            <div style="background: #11121d;float: right;padding: 25px;border-radius: 8px">
+                <canvas id = "canz" width = "620" height = "500" style="background: #0f1111;border: 0.1pt #484c59 solid;">
+
+		</canvas>
+                <p id="log"></p>
+
+            </div>    
+                
+            <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+		<script>
+
+
+
+			class node{
+
+				constructor(name,next,value,x=0,y=0){
+					this.name = name;
+					this.next = next;
+					this.value = value;
+					this.x = x;
+					this.y = y;
+				}
+
+			}
+
+			var bag = [new node("ant","bat","65"),new node("bat","cat","66"),new node("atop","ant","64"),new node("cat","dog","67"),new node("dog","null","68")];
+
+			var nodes = [];
+			var canv = document.getElementById("canz");
+                        var ctx = canv.getContext("2d");
+                        var log = document.getElementById("log");
+                        var inam = document.getElementById("inpnam");
+                        var inam1 = document.getElementById("inpnam1");
+                        var ival = document.getElementById("inpval");
+                        var ival1 = document.getElementById("inpval1");
+
+
+                //node operators
+
+                function intherect(x,y,rx,ry,rw,rh){
+				var bool = false;
+				if( x>=rx && x<=rx+rw && y>=ry && y<=ry+rh ){
+					bool = true;
+				}
+				return bool;
+		}
+
+                function getHeadNode(){
+
+                            var head = false;
+                            var headnode = "";
+
+                            loopa:
+                            for(var j=0;j<bag.length;j++){
+
+				for(var i = 0;i<bag.length;i++){
+
+					if(bag[j].name === bag[i].next){
+                                            continue loopa;
+                                        }else{
+                                            if(i===bag.length-1){
+                                                head = true;
+                                                headnode = bag[j].name;
+                                            }
+                                        }
+
+				}
+
+                            }
+                            return {headnode,head};
+                        }
+
+                function getTailNode(){
+
+                            var tail = false;
+                            var tailnode = "";
+
+                            for(var i=0;i<bag.length;i++){
+                                if(bag[i].next === "null"){
+                                    tail = true;
+                                    tailnode = bag[i].name;
+                                    break;
+                                }
+                            }
+
+                            return {tailnode,tail};
+                        }
+
+                function getNodeByName(nodelu,name){
+
+                    var ind = -1;
+                    for(var i=0;i<nodelu.length;i++){
+                        if(nodelu[i].name === name){
+                            ind = i;
+                            break;
+                        }
+                    }
+                    return nodelu[ind];
+                }
+                
+                var topos = [];
+                var frompos = [];
+                var frate = 12;
+
+                function resetPos(){
+                    
+                    redraw();
+                    gdl();
+                    
+                    function sleep(ms){
+                       return new Promise(resolve => setTimeout(resolve,ms));
+                    }
+                    
+                    async function gdl(){
+                        
+                        var dis,ang;
+                        
+                        for (var fr = 1; fr <= frate ; fr++) {
+                            
+                            if(fr===1){
+                                resetpos.disabled = true;
+                                anmrg.disabled = true;
+                                for(var i=0;i<nodes.length;i++){
+                                    topos[i] = {x:(i*50),y:(i*50)};
+                                    frompos[i] = {x:(nodes[i].x),y:(nodes[i].y)};
+                                }
+                            }
+                        
+                        
+                        await sleep((1000/60));
+                        
+                        resetpos.innerHTML = ((fr/frate)*100+"").substring(0,2)+"%";
+        
+                           for(var i1=0;i1<nodes.length;i1++){
+                            
+                            var inpct = (fr/frate)*100;
+                            
+                            dis = distance(frompos[i1].x,frompos[i1].y,topos[i1].x,topos[i1].y);
+                            ang = angle(frompos[i1].x,frompos[i1].y,topos[i1].x,topos[i1].y);
+                            
+                            var outpct = (inpct/100)*dis;
+                                    
+                            if( frompos[i1].x!==topos[i1] && frompos[i1].y!==topos[i1].y ){        
+                                    
+                            nodes[i1].x = Math.cos(ang)*outpct + frompos[i1].x;
+                            nodes[i1].y = Math.sin(ang)*outpct + frompos[i1].y;
+                            
+                            }
+                            
+                           }
+                           redraw();
+                           
+                           if(fr===frate){
+                               resetpos.disabled = false;
+                               anmrg.disabled = false;
+                               resetpos.innerHTML = "Reset positions";
+                           }
+                        
+                        }
+                    }
+                    
+                   
+        
+                }
+
+		function rearrange(){
+
+			//var head = getHeadNode().head;
+                        var headnode = getHeadNode().headnode;
+
+                        nodes = [];
+
+                        //arrange by sequence
+                        nodes[nodes.length] = getNodeByName(bag,headnode);
+
+                        for(var i=1;i<bag.length;i++){
+
+                            nodes[i] = getNodeByName(bag,nodes[i-1].next);
+
+                        }
+                        
+                        bag = nodes;
+
+                }
+
+                function checkName(nm){
+                    
+                    var duplicate = false;
+                    for(var i=0;i<bag.length;i++){
+                                if( bag[i].name === nm || "null" === nm || "" === nm ){
+                                    duplicate = true;
+                                    break;
+                                }
+                    }
+                    return duplicate;
+                    
+                }
+                
+                function checkNext(nm){
+                    
+                    var duplicate = false;
+                    for(var i=0;i<bag.length;i++){
+                                if(bag[i].next === nm || "null" === nm || "" === nm){
+                                    duplicate = true;
+                                    break;
+                                }
+                    }
+                    return duplicate;
+                    
+                }
+
+                function addhead(){
+
+                    var nd = new node(inam.value,nodes[selected].name,ival.value,500,20);
+                    
+                    if(selected !== 0){
+                        getNodeByName(bag,nodes[selected-1].name).next = inam.value;
+                    }
+                    
+                    bag[bag.length] = nd;
+                    rearrange();
+                    selected = -1;
+                    redraw();
+                    log.innerHTML = "added successfully.";
+                    $("#log").fadeOut();
+                    $("#log").fadeIn(5000);
+                    redetail();
+                    
+                    inam.value = "";
+                    ival.value = "";
+                    
+                    //canv.onclick({offsetX:10,offsetY:10});
+
+                }
+                
+                function addtale(){
+
+                    getNodeByName(bag,nodes[selected].name).next = inam1.value;
+
+                    var nextu;
+                    
+                    if(selected === nodes.length-1){
+                        nextu = "null";
+                    }else{
+                        nextu = nodes[selected+1].name;
+                    }
+
+                    var nd = new node(inam1.value,nextu,ival1.value,500,20);
+                    
+                    bag[bag.length] = nd;
+                    rearrange();
+                    selected = -1;
+                    redraw();
+                    log.innerHTML = "added successfully.";
+                    $("#log").fadeOut();
+                    $("#log").fadeIn(5000);
+                    redetail();
+                    
+                    inam1.value = "";
+                    ival1.value = "";
+                    
+                    //canv.onclick({offsetX:10,offsetY:10});
+
+                }
+
+                function delnode(){
+                    
+                    if( selected>0 && selected<nodes.length-1 ){
+                        getNodeByName(bag,nodes[selected-1].name).next = getNodeByName(bag,nodes[selected+1].name).name;
+                    }else if(selected === nodes.length-1){
+                        getNodeByName(bag,nodes[selected-1].name).next = "null";
+                    }
+                    
+                    for(var i=selected;i<nodes.length;i++){
+                        nodes[i] = nodes[i+1];
+                        
+                    }
+                    bag = nodes;
+                    bag.length--;
+                    selected = -1;
+                        //console.log("del");
+                    rearrange();
+                    redraw();
+                    redetail();
+                    log.innerHTML = "deleted successfully.";
+                    $("#log").fadeOut();
+                    $("#log").fadeIn(5000);
+                    //canv.onclick({offsetX:10,offsetY:10});
+                    
+                }
+                
+                function redetail(){
+                    document.getElementById("sel").innerHTML = "selected node : ";
+                    document.getElementById("nxt").innerHTML = "next node : ";
+                    document.getElementById("val").innerHTML = "value : ";
+                    document.getElementById("tnd").innerHTML = "Total nodes : "+nodes.length;
+                    document.getElementById("ish").innerHTML = "is head : ";
+                    document.getElementById("ist").innerHTML = "is tail : ";
+                    add.disabled = true;
+                    add1.disabled = true;
+                    del.disabled = true;
+                }
+
+                var selected = -1;
+
+                //draw methods
+
+                function drawNodes(ctx){
+                    for(var i = 0;i<nodes.length;i++){
+                //if(i===0){ctx.clearRect(0,0,canv.width,canv.height);}
+				ctx.fillStyle = "#555555";
+				ctx.fillRect(nodes[i].x,nodes[i].y,75,30);
+                                ctx.fillStyle = "#22222288";
+				ctx.fillRect(nodes[i].x+75,nodes[i].y,25,30);
+				ctx.fillStyle = "#ffffffbb";
+				ctx.fillText(nodes[i].name,nodes[i].x+8,nodes[i].y+12);
+				ctx.fillText(nodes[i].next,nodes[i].x+78,nodes[i].y+12);
+				ctx.fillStyle = "#ff8800";
+				ctx.fillText(nodes[i].value,nodes[i].x+40,nodes[i].y+26);
+			}
+                }
+
+                function drawLines(ctx){
+
+                    for(var i = 0;i<nodes.length-1;i++){
+                       if(i===0){ ctx.clearRect(0,0,canv.width,canv.height); }
+                                ctx.lineWidth = "2px";
+                                ctx.fillStyle = "#00bb4488";
+                                ctx.strokeStyle = "#00bb44";
+                                
+                                ctx.beginPath();
+                                ctx.moveTo(nodes[i].x+100,nodes[i].y+15);
+                                ctx.lineTo(nodes[i+1].x,nodes[i+1].y+15);
+                                ctx.stroke();
+                                ctx.closePath();
+                                
+                                ctx.beginPath();
+                                ctx.ellipse(nodes[i].x+100,nodes[i].y+15,2,2,0,0,360);
+                                ctx.fill();
+                                ctx.closePath();
+                                
+                                ctx.beginPath();
+                                ctx.ellipse(nodes[i+1].x,nodes[i+1].y+15,2,2,0,0,360);
+                                ctx.fill();
+                                ctx.closePath();
+
+                        }
+                }
+
+                function distance(px1,py1,px2,py2){
+                    return Math.sqrt(Math.pow(px2-px1,2)+Math.pow(py2-py1,2));
+                }
+
+                function angle(px1,py1,px2,py2){
+
+                    var numer = (py2-py1);
+                    var denom = (px2-px1);
+                    var angle = Math.abs(Math.atan( numer/denom ));
+
+                    if(numer<0 && denom<0){
+                         angle+=(180*0.0174533);
+                    }else if(numer<0 && denom>0){
+                        angle += ( (360*0.0174533) - (2*angle) );
+                    }else if(numer>0 && denom<0){
+                        angle += ( (180*0.0174533)-(2*angle) );
+                    }
+
+                    return angle;
+                }
+
+                function arrow(fx,fy,lx,ly,ctx){
+
+                    var ang = angle(fx,fy,lx,ly);
+                    var dis = distance(fx,fy,lx,ly);
+
+                    var arrowpin=[],left=[],right=[];
+
+                    arrowpin[0] = Math.cos(ang)*((dis/2)+5) + fx;
+                    arrowpin[1] = Math.sin(ang)*((dis/2)+5) + fy;
+
+                    left[0] = Math.cos(ang+40)*(5) + arrowpin[0];
+                    left[1] = Math.sin(ang+40)*(5) + arrowpin[1];
+
+                    right[0] = Math.cos(ang-40)*(5) + arrowpin[0];
+                    right[1] = Math.sin(ang-40)*(5) + arrowpin[1];
+
+                    ctx.strokeStyle = "#00bb44";
+
+                    /*ctx.beginPath();
+                    ctx.moveTo(fx,fy);
+                    ctx.lineTo(lx,ly);
+                    ctx.stroke();
+                    ctx.closePath();*/
+
+                    ctx.beginPath();
+                    ctx.moveTo(arrowpin[0],arrowpin[1]);
+                    ctx.lineTo(left[0],left[1]);
+                    ctx.stroke();
+                    ctx.closePath();
+
+                    ctx.beginPath();
+                    ctx.moveTo(arrowpin[0],arrowpin[1]);
+                    ctx.lineTo(right[0],right[1]);
+                    ctx.stroke();
+                    ctx.closePath();
+                    //console.log(arrowpin[0]+","+arrowpin[1]);
+                }
+
+                function drawDirections(ctx){
+                    for(var i=0;i<nodes.length-1;i++){
+                        arrow(nodes[i].x+100,nodes[i].y+15,nodes[i+1].x,nodes[i+1].y+15,ctx);
+                    }
+                }
+
+                function drawSelRect(ctx){
+                    if(selected!==-1){
+                                ctx.lineWidth = "2px";
+                                ctx.strokeStyle = "#44bbee";
+                                ctx.strokeRect(nodes[selected].x-2,nodes[selected].y-2,104,34);
+                            }
+                }
+
+                function clearS(ctx){
+                    ctx.clearRect(0,0,canv.width,canv.height);
+                }
+
+		function redraw(){
+
+                        ctx.font = "12px sans-serif";
+                        clearS(ctx);
+                        drawLines(ctx);
+                        drawDirections(ctx);
+                        drawNodes(ctx);
+                        drawSelRect(ctx);
+
+		}
+                
+    rearrange();
+    resetPos();
+    redraw();
+
+                    function anm(){
+                        
+                        if(anmrg.value==="0"){
+                            ansp.innerHTML = "Off";
+                            frate = 1;
+                        }else{
+                            ansp.innerHTML = anmrg.value+"X";
+                            frate = Math.pow(4,anmrg.value+1);
+                        }
+                        
+                        switch(anmrg.value){
+                            case "0":
+                                ansp.innerHTML = "Off";
+                                frate = 1;
+                                break;
+                            case "1":
+                                ansp.innerHTML = "1X";
+                                frate = 10;
+                                break;
+                            case "2":
+                                ansp.innerHTML = "2X";
+                                frate = 60;
+                                break;
+                            case "3":
+                                ansp.innerHTML = "3X";
+                                frate = 120;
+                                break;
+                            case "4":
+                                ansp.innerHTML = "4X";
+                                frate = 300;
+                                break;
+                        }
+                        
+                    }
+
+                        var mcli = false;
+                        var cpx,cpy,dpx,dpy,dra=false;
+
+                        //action controlling
+
+			canv.onmousedown = (e)=>{
+
+                            mcli = true;
+                            selected = -1;
+				for(var i=0;i<nodes.length;i++){
+                                    //console.log(e.offsetX+","+e.offsetY+" "+intherect(e.layerX,e.layerY,nodes[i].x,nodes[i].y,100,30));
+					if(intherect(e.offsetX,e.offsetY,nodes[i].x,nodes[i].y,100,30)){
+                                            selected = i;
+
+                                            document.getElementById("sel").innerHTML = "selected node : "+nodes[i].name;
+                                            document.getElementById("nxt").innerHTML = "next node : "+nodes[i].next;
+                                            document.getElementById("val").innerHTML = "value : "+nodes[i].value;
+                                            document.getElementById("tnd").innerHTML = "Total nodes : "+nodes.length;
+                                            document.getElementById("ish").innerHTML = "is head : "+(getHeadNode().headnode === nodes[i].name);
+                                            document.getElementById("ist").innerHTML = "is tail : "+(getTailNode().tailnode === nodes[i].name);
+
+                                        }else if (i===nodes.length-1 && selected === -1) {
+
+                                            redetail();
+                                            
+                                        }else{}
+
+				}
+
+                                updinp();
+
+                                redraw();
+
+			};
+
+                        canv.onmouseup = ()=>{
+                            mcli = false;
+                            dra = false;
+                            //console.log("upppp"+e.layerX+","+e.layerY+" "+mcli);
+                        };
+
+                        canv.onmousemove= (e)=>{
+
+                            if(mcli){
+                                if((!dra) && (selected !== -1) ){
+                                    cpx = nodes[selected].x;
+                                    cpy = nodes[selected].y;
+                                    px = e.layerX;
+                                    py = e.layerY;
+                                    cpx = px-cpx;
+                                    cpy = py-cpy;
+                                    dra = true;
+                                }else{
+                                    if(selected !== -1){
+                                        nodes[selected].x = Math.abs(e.layerX-cpx);
+                                        nodes[selected].y = Math.abs(e.layerY-cpy);
+                                        redraw();
+                                    }
+                                }
+
+                                //console.log(e.layerX+","+e.layerY);
+                            }
+
+                        };
+
+                        document.getElementById("add").onclick = addhead;
+                        document.getElementById("add1").onclick = addtale;
+                        document.getElementById("del").onclick = delnode;
+                        document.getElementById("resetpos").onclick = ()=>{
+                            resetPos();
+                            redraw();
+                        };
+                        
+                        function updinp(){
+                            add.disabled = !(inamer() && ivaler() && selected!==-1);
+                            add1.disabled = !(inamer1() && ivaler1() && selected!==-1);
+                            del.disabled = (selected===-1);
+                        }
+
+                        var i1=false,v1=false,i2=false,v2=false;
+                        
+                        function inamer(){
+                            if(checkName(inam.value)){
+                                //console.log(inam.value);
+                                i1 = false;
+                                inam.style = "color : #ff8888";
+                                
+                            }else{
+                                i1 = true;
+                                inam.style = "color : #000000";
+                                log.innerHTML = "";
+                            }
+                            
+                            return i1;
+                        }
+                        
+                        function inamer1(){
+                            if(checkNext(inam1.value)){
+                                //console.log(inam.value);
+                                i2 = false;
+                                inam1.style = "color : #ff8888";
+                                
+                                
+                            }else{
+                                i2 = true;
+                                inam1.style = "color : #000000";
+                                log.innerHTML = "";
+                            }
+                            
+                            return i2;
+                        }
+                        
+                        function ivaler(){
+                            if(ival.value === ""){
+                                
+                                v1 = false;
+                                ival.style = "color : #ff8888";
+                                
+                                
+                            }else{
+                                v1 = true;
+                                ival.style = "color : #000000";
+                                
+                            }
+                            
+                            return v1;
+                        }
+                        
+                        function ivaler1(){
+                            if(ival1.value === ""){
+                                
+                                v2 = false;
+                                ival1.style = "color : #ff8888";
+                                
+                                
+                            }else{
+                                v2 = true;
+                                ival1.style = "color : #000000";
+                                log.innerHTML = "";
+                            }
+                            
+                            return v2;
+                        }
+
+                        inam.oninput = updinp;
+                        
+                        inam1.oninput = updinp;
+                        
+                        ival.oninput = updinp;
+                        
+                        ival1.oninput = updinp;
+
+            </script>
+
+	</body>
+</html>
